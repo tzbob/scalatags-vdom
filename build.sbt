@@ -9,6 +9,9 @@ scalafmtConfig in ThisBuild := Some(file(".scalafmt"))
 organization := "be.tzbob"
 name := "scalatags-vdom"
 
+scalaJSUseRhino in Global := false
+requiresDOM := true
+
 scalacOptions ++= Seq(
   "-encoding",
   "UTF-8",
@@ -27,5 +30,13 @@ scalacOptions ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.lihaoyi" %%% "scalatags" % "0.6.0"
+  "com.lihaoyi" %%% "scalatags" % "0.6.0",
+  "com.lihaoyi" %%% "utest" % "0.3.1" % "test"
 )
+
+jsDependencies ++= Seq(
+  "org.webjars.bower" % "virtual-dom" % "2.1.1" / "virtual-dom.js"
+)
+
+testFrameworks += new TestFramework("utest.runner.Framework")
+
