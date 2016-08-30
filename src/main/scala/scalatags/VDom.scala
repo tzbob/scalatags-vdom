@@ -115,8 +115,8 @@ object VDom
 
     implicit def stringFrag(v: String) = new VDom.StringFrag(v)
 
-    val RawFrag = VDom.RawFrag
-    type RawFrag = VDom.RawFrag
+    val RawFrag = StringFrag
+    type RawFrag = StringFrag
 
     val StringFrag = VDom.StringFrag
     type StringFrag = VDom.StringFrag
@@ -125,12 +125,6 @@ object VDom
 
     type Tag = VDom.TypedTag[VTreeChild]
     val Tag = VDom.TypedTag
-  }
-
-  object RawFrag extends Companion[RawFrag]
-  case class RawFrag(v: String) extends vdom.Frag {
-    Objects.requireNonNull(v)
-    def render = ???
   }
 
   object StringFrag extends Companion[StringFrag]
