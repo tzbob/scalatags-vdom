@@ -90,7 +90,9 @@ object VDom
   trait Aggregate
       extends generic.Aggregate[vdom.Builder, VTreeChild, VTreeChild] {
     implicit def ClsModifier(s: stylesheet.Cls): Modifier = new Modifier {
-      def applyTo(t: vdom.Builder) = t.appendAttribute("class", s.name)
+      def applyTo(t: vdom.Builder) = {
+        t.addClassName(s.name)
+      }
     }
 
     implicit class StyleFrag(s: generic.StylePair[vdom.Builder, _])
@@ -115,8 +117,8 @@ object VDom
 
     implicit def stringFrag(v: String) = new VDom.StringFrag(v)
 
-    val RawFrag = StringFrag
-    type RawFrag = StringFrag
+    val RawFrag = VDom.RawFrag
+    type RawFrag = VDom.RawFrag
 
     val StringFrag = VDom.StringFrag
     type StringFrag = VDom.StringFrag
@@ -127,6 +129,12 @@ object VDom
     val Tag = VDom.TypedTag
   }
 
+  object RawFrag extends Companion[RawFrag]
+  case class RawFrag(v: String) extends vdom.Frag {
+    Objects.requireNonNull(v)
+    def render: VText = new VText(v)
+  }
+
   object StringFrag extends Companion[StringFrag]
   case class StringFrag(v: String) extends vdom.Frag {
     Objects.requireNonNull(v)
@@ -135,7 +143,7 @@ object VDom
 
   class GenericAttr[T] extends AttrValue[T] {
     def apply(t: vdom.Builder, a: Attr, v: T): Unit = {
-      t.appendAttribute(a.name, v.toString)
+      t.updateAttribute(a.name, v.toString)
     }
   }
 
@@ -172,7 +180,7 @@ object VDom
       this.copy(tag = tag, void = void, modifiers = xs :: modifiers)
     }
 
-    override def toString = render.toString
+    override def toString = VirtualDom.create(render).outerHTML
   }
 
 }

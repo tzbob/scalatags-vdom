@@ -63,7 +63,8 @@ object VDomTests extends TestSuite {
 
         val wrapped = VirtualDom.create(div(rendered).render)
 
-        assert(wrapped.innerHTML == "<h1>titless</h1><div>lol</div>")
+        val outerHTML = wrapped.outerHTML
+        assert(outerHTML == "<div><h1>titless</h1><div>lol</div></div>")
       } //end
     }
   }

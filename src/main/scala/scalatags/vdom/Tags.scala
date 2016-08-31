@@ -1,7 +1,6 @@
 package scalatags
 package vdom
 
-import scalatags.vdom.raw.VNode
 import scalatags.vdom.raw.VirtualDom.VTreeChild
 
 trait Tags

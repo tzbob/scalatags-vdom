@@ -10,11 +10,24 @@ class Builder(
 
   val attributes = js.Dictionary.empty[js.Any]
   val style      = js.Dictionary.empty[String]
+  val classNames = js.Array[String]()
   val children   = js.Array[Frag[_, VTreeChild]]()
 
   def addChild(f: Frag[_, VTreeChild]): Unit = children.push(f)
 
-  def appendAttribute(key: String, value: js.Any): Unit =
+  def addClassName(name: String): Unit = classNames.push(name)
+
+  def makeClassNameString: Option[String] = {
+    val namesOpt =
+      if (classNames.isEmpty) None
+      else Option(classNames.mkString(" "))
+
+    attributes.get("class").asInstanceOf[Option[String]].flatMap { x =>
+      namesOpt.map(y => s"$x $y")
+    }
+  }
+
+  def updateAttribute(key: String, value: js.Any): Unit =
     attributes.update(key, value)
 
   def addStyle(key: String, value: String): Unit =
@@ -25,10 +38,11 @@ class Builder(
 
     val renderedChildren = Option(children.map(_.render)).orUndefined
 
-    this.appendAttribute("style", style)
-    val finalAttributes = Option(attributes).orUndefined
+    makeClassNameString.foreach(this.updateAttribute("class", _))
+    val properties =
+      js.Dictionary[js.Any]("attributes" -> attributes, "style" -> style)
 
-    new VNode(tag, finalAttributes, renderedChildren)
+    new VNode(tag, Option(properties).orUndefined, renderedChildren)
   }
 
 }
