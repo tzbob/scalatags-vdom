@@ -6,11 +6,11 @@ import scala.language.implicitConversions
 import scalatags.generic.{Aliases, Namespace, StylePair}
 import scalatags.stylesheet.{StyleSheetFrag, StyleTree}
 import scalatags.vdom.raw.VirtualDom.VTreeChild
-import scalatags.vdom.raw.{VNode, VText, VirtualDom}
+import scalatags.vdom.raw.{VText, VirtualDom}
 
 /**
   * A Scalatags module that generates `VNode`s when the tags are rendered.
-  * This provides some additional flexibility over the [[Text]] backend, as you
+  * This provides some additional flexibility over the Text backend, as you
   * can bind structured objects to the attributes of your `VNode` without
   * serializing them first into strings.
   */
@@ -100,7 +100,8 @@ object VDom
       def applyTo(c: StyleTree) = {
         val b = new vdom.Builder
         s.applyTo(b)
-        c.copy(styles = c.styles ++ b.style)
+        val escapedStyles = b.style.mapValues(v => s" $v;")
+        c.copy(styles = c.styles ++ escapedStyles)
       }
     }
 

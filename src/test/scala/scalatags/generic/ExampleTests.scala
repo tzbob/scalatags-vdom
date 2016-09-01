@@ -511,29 +511,31 @@ class ExampleTests[Builder, Output <: FragT, FragT](
         </html>
     """)
 
-    'unsanitizedInput - strCheck({
-      val evilInput = "<script>alert('hello!')</script>"
+    // TODO: Decide what to do regarding 'raw'
+//    'unsanitizedInput - strCheck({
+//      val evilInput = "<script>alert('hello!')</script>"
+//
+//      html(
+//        head(
+//          script("some script")
+//        ),
+//        body(
+//          h1("This is my title"),
+//          raw(evilInput)
+//        )
+//      )
+//    }, """
+//        <html>
+//            <head>
+//                <script>some script</script>
+//            </head>
+//            <body>
+//                <h1>This is my title</h1>
+//                <script>alert('hello!')</script>
+//            </body>
+//        </html>
+//    """)
 
-      html(
-        head(
-          script("some script")
-        ),
-        body(
-          h1("This is my title"),
-          raw(evilInput)
-        )
-      )
-    }, """
-        <html>
-            <head>
-                <script>some script</script>
-            </head>
-            <body>
-                <h1>This is my title</h1>
-                <script>alert('hello!')</script>
-            </body>
-        </html>
-    """)
     'additionalImports - strCheck({
       // bundle is scalatags.Text or scalatags.JsDom
       import bundle._

@@ -20,11 +20,11 @@ class Builder(
   def makeClassNameString: Option[String] = {
     val namesOpt =
       if (classNames.isEmpty) None
-      else Option(classNames.mkString(" "))
+      else Some(classNames.mkString(" "))
 
     attributes.get("class").asInstanceOf[Option[String]].flatMap { x =>
       namesOpt.map(y => s"$x $y")
-    }
+    }.orElse(namesOpt)
   }
 
   def updateAttribute(key: String, value: js.Any): Unit =
